@@ -19,7 +19,7 @@
 #include "opendevice.h"
 #include "libmicro/include/can.h"
 #include "libmicro/include/can-tcp.h"
-#include "libmicro/include/uart-host.h"
+#include "libmicro/include/uart.h"
 #include "libmicro/include/can-uart.h"
 #include "libmicro/include/debug.h"
 
@@ -108,23 +108,17 @@ void hexdump(unsigned char *addr, int size)
 
 void customscripts(rs232can_msg *msg)
 {
-        FILE *logFP;
-        FILE *scriptFP;
         char tmpstr[80];
         char tmpstr2[80];
         time_t mytime;
-        char as_args[9][5];
         struct tm *tm;
-
         int result, status;
-
         uint8_t i;
 
         setlocale (LC_ALL, "C");
         mytime = time(NULL);
         tm = localtime(&mytime);
 
-        char line[300];
         can_message_raw *in_msg = (can_message_raw *)(msg->data);
         can_message match_msg = {0x00, 0x00, 0x00, 0x00, 0x00, {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}};
         can_message dec_msg = {0x00, 0x00, 0x00, 0x00, 0x00, {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}};
@@ -145,6 +139,7 @@ void customscripts(rs232can_msg *msg)
         strftime(tmpstr2, 79, "%c", tm);
 
         if ( logfile != NULL) {
+                FILE *logFP;
                 // open logfile to append - use logrotate
                 if ( (logFP = fopen(logfile, "a")) != NULL) {
                         memset(tmpstr, 0, 80);
@@ -182,7 +177,9 @@ void customscripts(rs232can_msg *msg)
 
         // 'scriptfile' is global
         if ( scriptfile != NULL) {
+                FILE *scriptFP;
                 if ( (scriptFP = fopen(scriptfile, "r")) != NULL) {
+                        char line[300];
                         // we only support full match - on src/dst and dlc
                         // example:
                         // 0x00:0x00 0x00:0x00 0x04  -> command
@@ -218,6 +215,8 @@ void customscripts(rs232can_msg *msg)
                                                 if (vfork()) {
                                                         _exit(0);
                                                 } else {
+                                                        char as_args[9][5];
+
                                                         snprintf(as_args[0], 5, "0x%.2x", dec_msg.dlc);
                                                         snprintf(as_args[1], 5, "0x%.2x", dec_msg.data[0]);
                                                         snprintf(as_args[2], 5, "0x%.2x", dec_msg.data[1]);
@@ -746,7 +745,9 @@ int main(int argc, char *argv[])
                 if (devcnt > 1) {
                         printf("Which device (num)? ");
                         scanf("%u", &tmp);
-                        fflush(stdin);
+
+                        // WTF why fflush(stdin) Oo
+                        fflush(stdout);
                 }
 
                 udhandle = usb_open(devices[tmp]);
