@@ -15,7 +15,7 @@ libusb or libusb-win32.
 */
 
 #include <stdio.h>
-#include "opendevice.h"
+#include <opendevice.h>
 
 /* ------------------------------------------------------------------------- */
 

@@ -14,14 +14,14 @@
 #include <errno.h>
 #include <usb.h>
 
-#include "config.h"
-#include "usb_id.h"
-#include "opendevice.h"
-#include "libmicro/include/can.h"
-#include "libmicro/include/can-tcp.h"
-#include "libmicro/include/uart.h"
-#include "libmicro/include/can-uart.h"
-#include "libmicro/include/debug.h"
+#include <config.h>
+#include <usb_id.h>
+#include <opendevice.h>
+#include <libmicro/can.h>
+#include <libmicro/can-tcp.h>
+#include <libmicro/uart.h>
+#include <libmicro/can-uart.h>
+#include <libmicro/debug.h>
 
 
 #ifndef max
