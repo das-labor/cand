@@ -53,9 +53,9 @@ static const char *gregs[] = {
         "SS"
 };
 
-char *progname;
-char *serial;
-char *usb_parm;
+char *progname = NULL;
+char *serial = NULL;
+char *usb_parm = NULL;
 char *logfile = NULL;
 char *scriptfile = NULL;
 
@@ -407,11 +407,6 @@ void process_client_msg(cann_conn_t *client)
         debug(3, "...processing done.");
 }
 
-void new_client( cann_conn_t *client )
-{
-        // XXX
-}
-
 int poll_usb()
 {
         debug( 9, "IN POLL_USB" );
@@ -743,11 +738,12 @@ int main(int argc, char *argv[])
                 usbListDevices(devices, vid, pid);
 
                 if (devcnt > 1) {
+                        int ch;
                         printf("Which device (num)? ");
                         scanf("%u", &tmp);
 
-                        // WTF why fflush(stdin) Oo
-                        fflush(stdout);
+                        // Flush the stdin in correct way
+                        while ((ch = getchar()) != '\n' && ch != EOF);
                 }
 
                 udhandle = usb_open(devices[tmp]);
