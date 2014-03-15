@@ -1,4 +1,4 @@
 AM_CFLAGS = --pedantic -Wall -std=gnu99 -O0
 
 bin_PROGRAMS = cand
-cand_SOURCES = main.c lib-host/uart-host.c lib-host/can-uart.c lib-host/can-encap.c lib-host/can-tcp.c lib-host/debug.c lib-host/crc16.c opendevice.c
+cand_SOURCES = main.c libmicro/uart/uart-host.c libmicro/can/can-uart.c libmicro/can/can-encap.c libmicro/can/can-tcp.c libmicro/utils/debug.c libmicro/utils/crc16.c opendevice.c
